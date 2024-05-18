@@ -1,0 +1,26 @@
+button {
+	display: flex;
+	height: 46px;
+	padding: 13px 20px;
+	justify-content: center;
+	align-items: center;
+	font-weight: 600;
+	text-decoration: none;
+	white-space: nowrap;
+	border-radius: 5px;
+	border: none;
+	color: white;
+	background-color: $primary-color;
+	transition: 0.23s;
+
+	color: white;
+	background-color: $primary-color;
+	&:hover {
+		color: white;
+		background-color: $primary-color-hover;
+	}
+	&:active {
+		color: white;
+		background-color: $primary-color;
+	}
+}
