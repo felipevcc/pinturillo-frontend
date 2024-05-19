@@ -16,13 +16,13 @@ import { alertError } from '../helpers/alertTemplates';
 const Home = () => {
 	localStorage.setItem('selectedView', 'home');
 	const navigate = useNavigate();
-	const { setPlayer } = usePlayer() as PlayerContextType;
+	const { player, setPlayer } = usePlayer() as PlayerContextType;
 	/* const [isLoading, setIsLoading] = useState(true); */
 	const [isOpen, setIsOpen] = useState(false);
 	const dropdownRef = useRef(null);
 
-	const [username, setUsername] = useState('');
-  const [selectedImage, setSelectedImage] = useState("https://i.postimg.cc/25HQ2f92/default.png");
+	const [username, setUsername] = useState(player ? player.name : '');
+  const [selectedImage, setSelectedImage] = useState(player ? player.avatar : "https://i.postimg.cc/25HQ2f92/default.png");
   const imageOptions = [
 		"https://upload.wikimedia.org/wikipedia/en/thumb/c/c3/Dignitas_logo.svg/800px-Dignitas_logo.svg.png",
 		"https://files.tips.gg/static/image/teams/anonymo-esports-valorant.png",
