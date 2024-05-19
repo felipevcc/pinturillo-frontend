@@ -1,14 +1,11 @@
-import React, { useEffect, useState } from 'react';
-//import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-//import { faEye, faEyeSlash, faLock, faUser } from '@fortawesome/free-solid-svg-icons';
-/* import './home.scss'; */
+import React, { useEffect, useState, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
 	faTwitch,
 	faTwitter,
 	faYoutube,
-	faDiscord,
+	faDiscord
 } from '@fortawesome/free-brands-svg-icons';
 import { faPencil } from '@fortawesome/free-solid-svg-icons';
 /* import { API } from '../../env'; */
@@ -18,8 +15,38 @@ const Home = () => {
 	/* const navigate = useNavigate(); */
 
 	/* const [isLoading, setIsLoading] = useState(true); */
+	const [isOpen, setIsOpen] = useState(false);
+
+	const dropdownRef = useRef(null);
+
+  const [selectedImage, setSelectedImage] = useState("https://i.postimg.cc/25HQ2f92/default.png");
+  const imageOptions = [
+		"https://upload.wikimedia.org/wikipedia/en/thumb/c/c3/Dignitas_logo.svg/800px-Dignitas_logo.svg.png",
+		"https://files.tips.gg/static/image/teams/anonymo-esports-valorant.png",
+		"https://cdn.thespike.gg/Teams%25205%2FArctic_1648889304458.png",
+		"https://vxesport.com/wp-content/uploads/2022/03/tundra-dota2.png",
+		"https://gameshard.s3.eu-central-1.amazonaws.com/teams/logo/gha1nHXhPly0gZpx1kCRcmDgaOBTdw1UEDAFAcoC.png",
+		"https://e-skill.es/storage/avatares/avatares-1612463722.png",
+		"https://am-a.akamaihd.net/image?resize=400:&f=http%3A%2F%2Fstatic.lolesports.com%2Fteams%2F1631819669150_fnc-2021-worlds.png",
+		"https://cdn.icon-icons.com/icons2/3158/PNG/512/character_grim_halloween_reaper_scythe_icon_193255.png",
+		"https://cdn.kibrispdr.org/data/807/polosan-logo-esport-serigala-54.png",
+	];
+
+	const handleImageChange = (newImage: string) => {
+		setSelectedImage(newImage);
+		setIsOpen(false);
+	};
 
 	useEffect(() => {
+		const handleClickOutside = (event: MouseEvent) => {
+			if (dropdownRef.current && !(dropdownRef.current as HTMLElement).contains(event.target as Node)) {
+				setIsOpen(false);
+			}
+		};
+		document.addEventListener('mouseup', handleClickOutside);
+		return () => {
+			document.removeEventListener('mouseup', handleClickOutside);
+		};
 		// Query data
 		/* (async () => {
 			const url = new URL(`${API}/api/v1/data/summary`);
@@ -31,7 +58,7 @@ const Home = () => {
 				})
 				.catch(error => console.log(error))
 		})(); */
-	}, []);
+	}, [isOpen, dropdownRef]);
 
 	return (
 		<div className="home-container">
@@ -40,30 +67,35 @@ const Home = () => {
 			</div>
 			<div className="home-content">
 				<div className="profile-container">
-					<div className='profile-container__avatar'>
-						<img
-							className="profile-image"
-							src="https://i.postimg.cc/25HQ2f92/default.png"
-							alt="Perfil"
-						/>
-						<button className="edit-button">
+					<div className="profile-container__avatar">
+						<img className="profile-image" src={selectedImage} alt="Perfil" />
+
+						<button className="edit-button btn-design" type="button" onMouseUp={(event) => { event.stopPropagation(); setIsOpen(!isOpen); }}>
 							<FontAwesomeIcon icon={faPencil} />
 						</button>
+						{isOpen && (
+							<div className="dropdown shadow-lg" ref={dropdownRef}>
+								{imageOptions.map((image, index) => (
+									<button key={index} className={image === selectedImage ? 'selected' : ''} onClick={() => handleImageChange(image)}>
+										<img src={image} alt="Opción de imagen" />
+									</button>
+								))}
+							</div>
+						)}
+
 					</div>
-					<div className='profile-container__username'>
+					<div className="profile-container__username">
 						<input
 							type="text"
 							className="form-control"
 							placeholder="Usuario"
 							aria-label="Username"
 						/>
-						<button type="submit">
-							UNIRSE
-						</button>
+						<button type="submit" className='btn-design'>UNIRSE</button>
 					</div>
 				</div>
 				<div className="divider"></div>
-				<div className='game-instructions'>
+				<div className="game-instructions">
 					<h2>¿Cómo jugar?</h2>
 					<ol>
 						<li>

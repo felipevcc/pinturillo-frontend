@@ -1,4 +1,4 @@
-button {
+.btn-design {
 	display: flex;
 	height: 46px;
 	padding: 13px 20px;
@@ -12,9 +12,6 @@ button {
 	color: white;
 	background-color: $primary-color;
 	transition: 0.23s;
-
-	color: white;
-	background-color: $primary-color;
 	&:hover {
 		color: white;
 		background-color: $primary-color-hover;
