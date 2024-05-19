@@ -1,5 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { PlayerContextType } from '../models/player/player-context.interface';
+import { usePlayer } from '../context/PlayerContext';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
 	faTwitch,
@@ -8,17 +10,18 @@ import {
 	faDiscord
 } from '@fortawesome/free-brands-svg-icons';
 import { faPencil } from '@fortawesome/free-solid-svg-icons';
+import { alertError } from '../helpers/alertTemplates';
 /* import { API } from '../../env'; */
 
 const Home = () => {
 	localStorage.setItem('selectedView', 'home');
-	/* const navigate = useNavigate(); */
-
+	const navigate = useNavigate();
+	const { setPlayer } = usePlayer() as PlayerContextType;
 	/* const [isLoading, setIsLoading] = useState(true); */
 	const [isOpen, setIsOpen] = useState(false);
-
 	const dropdownRef = useRef(null);
 
+	const [username, setUsername] = useState('');
   const [selectedImage, setSelectedImage] = useState("https://i.postimg.cc/25HQ2f92/default.png");
   const imageOptions = [
 		"https://upload.wikimedia.org/wikipedia/en/thumb/c/c3/Dignitas_logo.svg/800px-Dignitas_logo.svg.png",
@@ -35,6 +38,15 @@ const Home = () => {
 	const handleImageChange = (newImage: string) => {
 		setSelectedImage(newImage);
 		setIsOpen(false);
+	};
+
+	const handleContinue = () => {
+		if (typeof username === 'string' && username.trim() !== '') {
+			setPlayer({ id: null, playRoomId: null, ws: null, score: null, name: username, avatar: selectedImage });
+			navigate('/join');
+		} else {
+			alertError('Por favor, introduce un nombre de usuario válido');
+		}
 	};
 
 	useEffect(() => {
@@ -76,7 +88,7 @@ const Home = () => {
 						{isOpen && (
 							<div className="dropdown shadow-lg" ref={dropdownRef}>
 								{imageOptions.map((image, index) => (
-									<button key={index} className={image === selectedImage ? 'selected' : ''} onClick={() => handleImageChange(image)}>
+									<button type="button" key={index} className={image === selectedImage ? 'selected' : ''} onClick={() => handleImageChange(image)}>
 										<img src={image} alt="Opción de imagen" />
 									</button>
 								))}
@@ -90,8 +102,10 @@ const Home = () => {
 							className="form-control"
 							placeholder="Usuario"
 							aria-label="Username"
+							value={username}
+							onChange={(e) => setUsername(e.target.value)}
 						/>
-						<button type="submit" className='btn-design'>UNIRSE</button>
+						<button type="button" className='btn-design' onClick={handleContinue}>UNIRSE</button>
 					</div>
 				</div>
 				<div className="divider"></div>

@@ -1,5 +1,4 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { useState } from 'react';
 import {
 	BrowserRouter as Router,
 	Routes,
@@ -9,21 +8,25 @@ import {
 } from 'react-router-dom';
 import './App.scss';
 import Home from './pages/Home';
-/* import Join from './pages/Join';
-import Results from './pages/Results';
+import Join from './pages/Join';
+/* import Results from './pages/Results';
 import Room from './pages/Room'; */
+import { PlayerProvider } from './context/PlayerContext';
 
 function App() {
 
 	return (
-		<Router>
-			<div className="app-container">
-				<Routes>
-					<Route path="/" element={<Home />} />
-					{/* <Route path="/*" element={<MainLayout />} /> */}
-				</Routes>
-			</div>
-		</Router>
+		<PlayerProvider>
+			<Router>
+				<div className="app-container">
+					<Routes>
+						<Route path="/" element={<Home />} />
+						<Route path="/join" element={<Join />} />
+						{/* <Route path="/*" element={<MainLayout />} /> */}
+					</Routes>
+				</div>
+			</Router>
+		</PlayerProvider>
 	);
 }
 
