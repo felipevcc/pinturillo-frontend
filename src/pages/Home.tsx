@@ -129,16 +129,16 @@ const Home = () => {
 			</div>
 			<div className="home-footer">
 				<div className="networks">
-					<a href="" className="icon">
+					<a href='/' target='_blank' rel='noopener noreferrer' className="icon">
 						<FontAwesomeIcon icon={faTwitch} />
 					</a>
-					<a href="" className="icon">
+					<a href='/' target='_blank' rel='noopener noreferrer' className="icon">
 						<FontAwesomeIcon icon={faTwitter} />
 					</a>
-					<a href="" className="icon">
+					<a href='/' target='_blank' rel='noopener noreferrer' className="icon">
 						<FontAwesomeIcon icon={faYoutube} />
 					</a>
-					<a href="" className="icon">
+					<a href='/' target='_blank' rel='noopener noreferrer' className="icon">
 						<FontAwesomeIcon icon={faDiscord} />
 					</a>
 				</div>

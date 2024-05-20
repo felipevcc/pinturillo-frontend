@@ -1,0 +1,26 @@
+.join-container {
+	height: 100vh;
+	.join-content {
+		display: flex;
+		justify-content: center;
+		gap: 5%;
+		width: 100%;
+		align-items: center;
+		height: calc(85% - 86px);
+		.create-room,
+		.join-room {
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+			gap: 20px;
+			background-color: $component-bg-dark;
+			padding: 25px 100px;
+			border-radius: 10px;
+			h2 {
+				text-align: center;
+				color: white;
+			}
+		}
+	}
+}
