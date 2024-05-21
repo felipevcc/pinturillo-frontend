@@ -7,7 +7,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Navbar from '../components/bars/Navbar';
 
 const Join = () => {
-	localStorage.setItem('selectedView', 'join');
 	const navigate = useNavigate();
 	const { player } = usePlayer() as PlayerContextType;
 
@@ -31,6 +30,12 @@ const Join = () => {
 						/* value={username}
 						onChange={(e) => setUsername(e.target.value)} */
 					/>
+					<select className="form-select" aria-label="Default select example">
+						<option disabled selected>Seleccionar categoría</option>
+						<option value="1">Animales</option>
+						<option value="2">Acciones</option>
+						<option value="3">Peliculas</option>
+					</select>
 					<button type="button" className='btn-design'>CREAR</button>
 				</div>
 				<div className='join-room shadow'>

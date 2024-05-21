@@ -1,0 +1,31 @@
+.room-container {
+	.room-content {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		.players-section {
+			flex: 1;
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+			gap: 20px;
+			background-color: $component-bg-dark;
+			border-radius: 5px;
+		}
+		.board-section {
+			flex: 1;
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+		}
+		.chat-section {
+			flex: 1;
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+		}
+	}
+}

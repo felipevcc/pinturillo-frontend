@@ -9,8 +9,9 @@ import {
 import './App.scss';
 import Home from './pages/Home';
 import Join from './pages/Join';
-/* import Results from './pages/Results';
-import Room from './pages/Room'; */
+import Categories from './pages/admin/Categories';
+import Room from './pages/Room';
+// import Results from './pages/Results';
 import { PlayerProvider } from './context/PlayerContext';
 
 function App() {
@@ -22,6 +23,8 @@ function App() {
 					<Routes>
 						<Route path="/" element={<Home />} />
 						<Route path="/join" element={<Join />} />
+						<Route path="/room" element={<Room />} />
+						<Route path="/admin" element={<Categories />} />
 						{/* <Route path="/*" element={<MainLayout />} /> */}
 					</Routes>
 				</div>

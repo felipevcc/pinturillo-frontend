@@ -129,10 +129,16 @@
 				flex-direction: column;
 				justify-content: center;
 				align-items: center;
-				gap: 15px;
-				input {
-					line-height: 42px;
-					height: 42px;
+				form {
+					display: flex;
+					flex-direction: column;
+					justify-content: center;
+					align-items: center;
+					gap: 15px;
+					input {
+						line-height: 42px;
+						height: 42px;
+					}
 				}
 			}
 		}

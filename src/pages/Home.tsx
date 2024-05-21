@@ -14,7 +14,6 @@ import { alertError } from '../helpers/alertTemplates';
 /* import { API } from '../../env'; */
 
 const Home = () => {
-	localStorage.setItem('selectedView', 'home');
 	const navigate = useNavigate();
 	const { player, setPlayer } = usePlayer() as PlayerContextType;
 	/* const [isLoading, setIsLoading] = useState(true); */
@@ -97,15 +96,17 @@ const Home = () => {
 
 					</div>
 					<div className="profile-container__username">
-						<input
-							type="text"
-							className="form-control"
-							placeholder="Usuario"
-							aria-label="Username"
-							value={username}
-							onChange={(e) => setUsername(e.target.value)}
-						/>
-						<button type="button" className='btn-design' onClick={handleContinue}>UNIRSE</button>
+						<form onSubmit={handleContinue}>
+							<input
+								type="text"
+								className="form-control"
+								placeholder="Usuario"
+								aria-label="Username"
+								value={username}
+								onChange={(e) => setUsername(e.target.value)}
+							/>
+							<button type="submit" className='btn-design'>UNIRSE</button>
+						</form>
 					</div>
 				</div>
 				<div className="divider"></div>
