@@ -16,6 +16,10 @@ const Join = () => {
 		}
 	}, [player]);
 
+	const joinRoom = () => {
+		navigate('/room');
+	}
+
 	return (
 		<div className="join-container">
 			<Navbar />
@@ -40,7 +44,7 @@ const Join = () => {
 				</div>
 				<div className='join-room shadow'>
 					<h2>Unirse a una mesa</h2>
-					<button type="button" className='btn-design'>UNIRSE</button>
+					<button type="button" className='btn-design' onClick={() => joinRoom()}>UNIRSE</button>
 				</div>
 			</div>
 		</div>

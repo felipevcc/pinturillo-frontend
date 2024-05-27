@@ -1,5 +1,5 @@
 export interface Player {
-	id: string | null;
+	id: string;
 	playRoomId: number | null;
   name: string;
 	avatar: string;

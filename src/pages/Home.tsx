@@ -11,6 +11,7 @@ import {
 } from '@fortawesome/free-brands-svg-icons';
 import { faPencil } from '@fortawesome/free-solid-svg-icons';
 import { alertError } from '../helpers/alertTemplates';
+import { v4 as uuidv4 } from 'uuid';
 /* import { API } from '../../env'; */
 
 const Home = () => {
@@ -41,7 +42,7 @@ const Home = () => {
 
 	const handleContinue = () => {
 		if (typeof username === 'string' && username.trim() !== '') {
-			setPlayer({ id: null, playRoomId: null, ws: null, score: null, name: username, avatar: selectedImage });
+			setPlayer({ id: uuidv4(), playRoomId: null, ws: null, score: null, name: username, avatar: selectedImage });
 			navigate('/join');
 		} else {
 			alertError('Por favor, introduce un nombre de usuario válido');
