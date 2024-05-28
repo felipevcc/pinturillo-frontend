@@ -11,20 +11,58 @@ const Room: React.FC = () => {
 	const messagesRef = useRef<HTMLUListElement>(null);
 	const inputRef = useRef<HTMLInputElement>(null);
 	const [socket, setSocket] = useState<WebSocket | null>(null);
-	const [isPainting, setIsPainting] = useState(false);
 	const [playerInTurn, setPlayerInTurn] = useState({
-		userId: '',
-		userName: '',
-		userAvatar: ''
+		id: '',
+		name: '',
+		avatar: ''
 	});
 	const [canDraw, setCanDraw] = useState(false);
 	const { player, setPlayer } = usePlayer() as PlayerContextType;
+	const isPainting = useRef(false);
 
 	useEffect(() => {
 		if (!player) {
 			navigate('/');
 			return;
 		}
+
+		const ws = new WebSocket(
+			`ws://localhost:3000/ws/room/1?userId=${player.id}&name=${player.name}&avatar=${player.avatar}`
+		);
+		setSocket(ws);
+		return () => {
+			if (socket) socket.close();
+		};
+	}, []);
+
+	const isPlayerInTurn = () => {
+		if (!playerInTurn || !player) return false;
+		return playerInTurn.id == player.id;
+	};
+
+	useEffect(() => {
+		if (!socket || !player) return;
+		socket.onclose = () => {
+			console.log('WebSocket connection closed.');
+		};
+		socket.onopen = () => {
+			console.log('WebSocket connection open.');
+			sendMessage({}, GameEventType.JOIN_GAME);
+		};
+
+		socket.onerror = error => {
+			console.error('WebSocket error:', error);
+		};
+
+		socket.onclose = () => {
+			console.log('WebSocket connection closed.');
+		};
+
+		socket.onmessage = event => {
+			console.log(event.data);
+			handleEventType(JSON.parse(event.data));
+		};
+
 		const canvas = canvasRef.current;
 		const ctx = canvas?.getContext('2d');
 		const chat = document.getElementById('chat');
@@ -33,33 +71,12 @@ const Room: React.FC = () => {
 
 		const canvasOffsetX = canvas.offsetLeft;
 		const canvasOffsetY = canvas.offsetTop;
-		canvas.width = window.innerWidth - chat.offsetWidth;
+		canvas.width = window.innerWidth - canvasOffsetX;
 		canvas.height = window.innerHeight - canvasOffsetY;
-
-		const ws = new WebSocket(
-			`ws://localhost:3000/ws/room/1?userId=${player.id}&name=${player.name}&avatar=${player.avatar}`
-		);
-		setSocket(ws);
-		ws.onopen = () => {
-			console.log('WebSocket connection open.');
-			sendMessage({}, GameEventType.JOIN_GAME);
-		};
-
-		ws.onerror = error => {
-			console.error('WebSocket error:', error);
-		};
-
-		ws.onclose = () => {
-			console.log('WebSocket connection closed.');
-		};
-
-		ws.onmessage = event => {
-			console.log(event.data);
-			handleEventType(JSON.parse(event.data));
-		};
+		ctx.fillStyle = '#ffffff';
+		/* ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height); */
 
 		const handleEventType = (communicationInterface: any) => {
-			console.log(communicationInterface);
 			switch (communicationInterface.gameEventType) {
 				case GameEventType.ROUND_NOTIFICATION:
 					handleRoundNotification(
@@ -84,8 +101,12 @@ const Room: React.FC = () => {
 		};
 
 		const handleRoundNotification = (payload: any) => {
-			setPlayerInTurn(payload.roundInfo);
-			setCanDraw(isPlayerInTurn());
+			if (payload.roundInfo) {
+				setPlayerInTurn(payload.roundInfo.playerInTurn);
+				if (payload.roundInfo.playerInTurn) {
+					setCanDraw(payload.roundInfo.playerInTurn.id == player.id);
+				}
+			}
 			alert(payload.message);
 		};
 
@@ -97,13 +118,13 @@ const Room: React.FC = () => {
 		};
 
 		const handlePlayerDrawing = (e: MouseEvent) => {
-			if (!canDraw || !isPainting) return;
+			if (!canDraw || !isPainting.current) return;
 			draw(e);
 			const gameEventType = GameEventType.USER_DRAW;
 			const x = e.clientX - canvasOffsetX;
 			const y = e.clientY;
 			const drawPayload = { x, y };
-			ws.send(JSON.stringify({ gameEventType, drawPayload }));
+			socket.send(JSON.stringify({ gameEventType, drawPayload }));
 		};
 
 		const handleSentDraw = (userDrawPayload: any) => {
@@ -120,12 +141,13 @@ const Room: React.FC = () => {
 
 		const handleGameOver = () => {
 			removeChatMessages();
-			ws.close();
+			socket.close();
+			console.log("WebSocket connection closed.");
 			alert('Game has finished');
 		};
 
 		const draw = (e: MouseEvent) => {
-			if (!isPainting) return;
+			if (!isPainting.current) return;
 			ctx.lineWidth = 5;
 			ctx.lineCap = 'round';
 			ctx.lineTo(e.clientX - canvasOffsetX, e.clientY);
@@ -133,7 +155,7 @@ const Room: React.FC = () => {
 		};
 
 		const handleMouseUp = () => {
-			setIsPainting(false);
+			isPainting.current = false;
 			ctx.stroke();
 			ctx.beginPath();
 		};
@@ -151,23 +173,24 @@ const Room: React.FC = () => {
 				: chatMessagePayload.senderName;
 		};
 
-		const isPlayerInTurn = () => {
-			return playerInTurn.userId === player.id;
-		};
-
 		const sendMessage = (payload: any, gameEventType: string) => {
-			ws.send(JSON.stringify({ gameEventType, payload }));
+			socket.send(JSON.stringify({ gameEventType, payload }));
 		};
 
 		canvas.addEventListener('mousedown', e => {
-			setIsPainting(true);
+			isPainting.current = true;
+			if (!canDraw || !isPainting.current) return;
+			handlePlayerDrawing(e);
 		});
 
-		canvas.addEventListener('mousemove', handlePlayerDrawing);
+		canvas.addEventListener('mousemove', e => {
+			if (!canDraw || !isPainting.current) return;
+			handlePlayerDrawing(e);
+		});
 
 		canvas.addEventListener('mouseup', e => {
 			handleMouseUp();
-			ws.send(JSON.stringify({ gameEventType: GameEventType.MOUSE_UP }));
+			socket.send(JSON.stringify({ gameEventType: GameEventType.MOUSE_UP }));
 		});
 
 		const sendButton = document.getElementsByTagName('button')[0];
@@ -179,8 +202,7 @@ const Room: React.FC = () => {
 				senderId: player.id,
 				senderName: player.name
 			};
-			console.log(chatMessagePayload);
-			ws.send(
+			socket.send(
 				JSON.stringify({
 					gameEventType: GameEventType.CHAT_MESSAGE,
 					chatMessagePayload
@@ -188,11 +210,7 @@ const Room: React.FC = () => {
 			);
 			if (inputRef.current) inputRef.current.value = '';
 		});
-
-		return () => {
-			ws.close();
-		};
-	}, []);
+	}, [socket, playerInTurn, canDraw, player, isPainting]);
 
 	return (
 		<div className="room-container">
