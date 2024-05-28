@@ -35,6 +35,27 @@ const Room: React.FC = () => {
 		};
 	}, []);
 
+	useEffect(() => {
+		if (!player || !socket) return;
+		const sendButton = document.getElementsByTagName('button')[0];
+		sendButton.addEventListener('click', e => {
+			e.preventDefault();
+			const message = inputRef.current?.value;
+			const chatMessagePayload = {
+				message,
+				senderId: player.id,
+				senderName: player.name
+			};
+			socket.send(
+				JSON.stringify({
+					gameEventType: GameEventType.CHAT_MESSAGE,
+					chatMessagePayload
+				})
+			);
+			if (inputRef.current) inputRef.current.value = '';
+		});
+	}, [socket]);
+
 	const isPlayerInTurn = () => {
 		if (!playerInTurn || !player) return false;
 		return playerInTurn.id == player.id;
@@ -69,12 +90,10 @@ const Room: React.FC = () => {
 
 		if (!canvas || !ctx || !chat) return;
 
-		const canvasOffsetX = canvas.offsetLeft;
-		const canvasOffsetY = canvas.offsetTop;
-		canvas.width = window.innerWidth - canvasOffsetX;
-		canvas.height = window.innerHeight - canvasOffsetY;
+		canvas.width = canvas.offsetWidth;
+		canvas.height = canvas.offsetHeight;
 		ctx.fillStyle = '#ffffff';
-		/* ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height); */
+		ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 
 		const handleEventType = (communicationInterface: any) => {
 			switch (communicationInterface.gameEventType) {
@@ -119,17 +138,20 @@ const Room: React.FC = () => {
 
 		const handlePlayerDrawing = (e: MouseEvent) => {
 			if (!canDraw || !isPainting.current) return;
-			draw(e);
+			const rect = canvas.getBoundingClientRect();
+			const x = e.clientX - rect.left;
+			const y = e.clientY - rect.top;
+			draw(x, y);
 			const gameEventType = GameEventType.USER_DRAW;
-			const x = e.clientX - canvasOffsetX;
-			const y = e.clientY;
-			const drawPayload = { x, y };
+			const lineWidth = ctx.lineWidth;
+			const drawPayload = { x, y, lineWidth };
 			socket.send(JSON.stringify({ gameEventType, drawPayload }));
 		};
 
 		const handleSentDraw = (userDrawPayload: any) => {
 			if (isPlayerInTurn()) return;
-			const { x, y } = userDrawPayload;
+			const { x, y, lineWidth } = userDrawPayload;
+			ctx.lineWidth = lineWidth;
 			ctx.lineTo(x, y);
 			ctx.stroke();
 		};
@@ -146,11 +168,11 @@ const Room: React.FC = () => {
 			alert('Game has finished');
 		};
 
-		const draw = (e: MouseEvent) => {
+		const draw = (x: number, y: number) => {
 			if (!isPainting.current) return;
 			ctx.lineWidth = 5;
 			ctx.lineCap = 'round';
-			ctx.lineTo(e.clientX - canvasOffsetX, e.clientY);
+			ctx.lineTo(x, y);
 			ctx.stroke();
 		};
 
@@ -191,24 +213,6 @@ const Room: React.FC = () => {
 		canvas.addEventListener('mouseup', e => {
 			handleMouseUp();
 			socket.send(JSON.stringify({ gameEventType: GameEventType.MOUSE_UP }));
-		});
-
-		const sendButton = document.getElementsByTagName('button')[0];
-		sendButton.addEventListener('click', e => {
-			e.preventDefault();
-			const message = inputRef.current?.value;
-			const chatMessagePayload = {
-				message,
-				senderId: player.id,
-				senderName: player.name
-			};
-			socket.send(
-				JSON.stringify({
-					gameEventType: GameEventType.CHAT_MESSAGE,
-					chatMessagePayload
-				})
-			);
-			if (inputRef.current) inputRef.current.value = '';
 		});
 	}, [socket, playerInTurn, canDraw, player, isPainting]);
 
