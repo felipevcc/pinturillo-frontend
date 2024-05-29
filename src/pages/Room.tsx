@@ -4,6 +4,7 @@ import { PlayerContextType } from '../models/player/player-context.interface';
 import { usePlayer } from '../context/PlayerContext';
 import Navbar from '../components/bars/Navbar';
 import { GameEventType } from '../enums/game-event.enum';
+import { environment } from '../environments/environment';
 
 const Room: React.FC = () => {
 	const navigate = useNavigate();
@@ -27,7 +28,7 @@ const Room: React.FC = () => {
 		}
 
 		const ws = new WebSocket(
-			`ws://localhost:3000/ws/room/1?userId=${player.id}&name=${player.name}&avatar=${player.avatar}`
+			`${environment.socketUrl}/ws/room/1?userId=${player.id}&name=${player.name}&avatar=${player.avatar}`
 		);
 		setSocket(ws);
 		return () => {
@@ -134,6 +135,7 @@ const Room: React.FC = () => {
 			const item = document.createElement('li');
 			item.textContent = `${senderName}: ${chatMessagePayload.message}`;
 			messagesRef.current?.appendChild(item);
+			item.scrollIntoView({ behavior: 'smooth' });
 		};
 
 		const handlePlayerDrawing = (e: MouseEvent) => {
@@ -220,15 +222,20 @@ const Room: React.FC = () => {
 		<div className="room-container">
 			<Navbar />
 			<div className="room-content">
-				<div id="chat">
-					<ul id="messages" ref={messagesRef}></ul>
-					<form id="form" action="">
-						<input id="input" ref={inputRef} autoComplete="off" />
-						<button type='submit'>Enviar</button>
-					</form>
+				<div className='players-list'>
+					<div className='players'></div>
 				</div>
 				<div className="drawing-board">
 					<canvas id="drawing-board" ref={canvasRef}></canvas>
+				</div>
+				<div id="chat">
+					<div className='messages-container'>
+						<ul id="messages" ref={messagesRef}></ul>
+					</div>
+					<form id="form" action="">
+						<input id="input" ref={inputRef} autoComplete="off" placeholder="Adivina la palabra" />
+						<button type='submit'>Enviar</button>
+					</form>
 				</div>
 			</div>
 		</div>
