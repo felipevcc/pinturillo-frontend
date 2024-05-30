@@ -1,8 +1,8 @@
 export interface Player {
 	id: string;
 	playRoomId: number | null;
-  name: string;
+	name: string;
 	avatar: string;
-	ws: any;
 	score: number | null;
+	inTurn: boolean;
 }

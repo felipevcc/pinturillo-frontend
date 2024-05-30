@@ -5,6 +5,8 @@ import { usePlayer } from '../context/PlayerContext';
 import Navbar from '../components/bars/Navbar';
 import { GameEventType } from '../enums/game-event.enum';
 import { environment } from '../environments/environment';
+import { Player } from '../models/player/player.interface';
+import PlayerInGame from '../components/player/PlayerInGame';
 
 const Room: React.FC = () => {
 	const navigate = useNavigate();
@@ -15,9 +17,13 @@ const Room: React.FC = () => {
 	const playerInTurn = useRef({
 		id: '',
 		name: '',
-		avatar: ''
+		avatar: '',
+		playRoomId: 0,
+		score: 0,
+		inTurn: false
 	});
 	const { player, setPlayer } = usePlayer() as PlayerContextType;
+	const [players, setPlayers] = useState<Player[]>([]);
 	const isPainting = useRef(false);
 
 	useEffect(() => {
@@ -25,6 +31,7 @@ const Room: React.FC = () => {
 			navigate('/');
 			return;
 		}
+		setPlayers([player]);
 
 		const ws = new WebSocket(
 			`${environment.socketUrl}/ws/room/1?userId=${player.id}&name=${player.name}&avatar=${player.avatar}`
@@ -120,6 +127,10 @@ const Room: React.FC = () => {
 		const handleRoundNotification = (payload: any) => {
 			if (payload.roundInfo) {
 				playerInTurn.current = payload.roundInfo.playerInTurn;
+				setPlayers([
+					...payload.roundInfo.guessers.map((player: any) => ({ ...player, inTurn: false })),
+					{ ...payload.roundInfo.playerInTurn, inTurn: true }
+				]);
 				clearCanvas();
 			}
 			alert(payload.message);
@@ -160,6 +171,7 @@ const Room: React.FC = () => {
 
 		const handleGameOver = () => {
 			removeChatMessages();
+			clearCanvas();
 			socket.close();
 			console.log("WebSocket connection closed.");
 			alert('Game has finished');
@@ -232,14 +244,18 @@ const Room: React.FC = () => {
 		<div className="room-container">
 			<Navbar />
 			<div className="room-content">
-				<div className='players-list'>
-					<div className='players'></div>
+				<div className="players-list">
+					<div className="players scroll-bar">
+						{[...players].sort((a, b) => (b?.score || 0) - (a?.score || 0)).map((player, index) => (
+							<PlayerInGame key={index} roomPlayer={player} />
+						))}
+					</div>
 				</div>
 				<div className="drawing-board">
 					<canvas id="drawing-board" ref={canvasRef}></canvas>
 				</div>
 				<div id="chat">
-					<div className='messages-container'>
+					<div className='messages-container scroll-bar'>
 						<ul id="messages" ref={messagesRef}></ul>
 					</div>
 					<form id="form" action="">

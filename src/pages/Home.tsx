@@ -26,11 +26,11 @@ const Home = () => {
   const imageOptions = [
 		"https://upload.wikimedia.org/wikipedia/en/thumb/c/c3/Dignitas_logo.svg/800px-Dignitas_logo.svg.png",
 		"https://files.tips.gg/static/image/teams/anonymo-esports-valorant.png",
-		"https://cdn.thespike.gg/Teams%25205%2FArctic_1648889304458.png",
+		"https://static.vecteezy.com/system/resources/previews/026/676/817/non_2x/gamer-mascot-logo-free-png.png",
 		"https://vxesport.com/wp-content/uploads/2022/03/tundra-dota2.png",
 		"https://gameshard.s3.eu-central-1.amazonaws.com/teams/logo/gha1nHXhPly0gZpx1kCRcmDgaOBTdw1UEDAFAcoC.png",
 		"https://e-skill.es/storage/avatares/avatares-1612463722.png",
-		"https://am-a.akamaihd.net/image?resize=400:&f=http%3A%2F%2Fstatic.lolesports.com%2Fteams%2F1631819669150_fnc-2021-worlds.png",
+		"https://gamepedia.cursecdn.com/cod_esports_gamepedia_en/9/93/Echo_Foxlogo.png",
 		"https://cdn.icon-icons.com/icons2/3158/PNG/512/character_grim_halloween_reaper_scythe_icon_193255.png",
 		"https://cdn.kibrispdr.org/data/807/polosan-logo-esport-serigala-54.png",
 	];
@@ -40,12 +40,13 @@ const Home = () => {
 		setIsOpen(false);
 	};
 
-	const handleContinue = () => {
+	const handleContinue = async (event: React.FormEvent) => {
+		event.preventDefault();
 		if (typeof username === 'string' && username.trim() !== '') {
-			setPlayer({ id: uuidv4(), playRoomId: null, ws: null, score: null, name: username, avatar: selectedImage });
+			setPlayer({ id: uuidv4(), playRoomId: null, score: 0, name: username, avatar: selectedImage, inTurn: false });
 			navigate('/join');
 		} else {
-			alertError('Por favor, introduce un nombre de usuario válido');
+			await alertError('Por favor, introduce un nombre de usuario válido');
 		}
 	};
 
