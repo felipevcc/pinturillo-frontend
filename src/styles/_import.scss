@@ -6,8 +6,10 @@
 @import 'layouts/home';
 @import 'layouts/join';
 @import 'layouts/room';
+@import 'layouts/results';
 @import 'layouts/admin/categories';
 
 /* Components */
 @import 'components/navbar';
 @import 'components/player-in-game';
+@import 'components/game-result';

@@ -6,7 +6,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 /* import { faPencil } from '@fortawesome/free-solid-svg-icons'; */
 import Navbar from '../components/bars/Navbar';
 
-const Join = () => {
+const Join: React.FC = () => {
 	const navigate = useNavigate();
 	const { player } = usePlayer() as PlayerContextType;
 

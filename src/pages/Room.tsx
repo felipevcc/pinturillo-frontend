@@ -111,7 +111,7 @@ const Room: React.FC = () => {
 					handleChatMessage(communicationInterface.chatMessagePayload);
 					break;
 				case GameEventType.GAME_OVER:
-					handleGameOver();
+					handleGameOver(communicationInterface.resultsPayload);
 					break;
 				case GameEventType.USER_DRAW:
 					handleSentDraw(communicationInterface.drawPayload);
@@ -169,12 +169,13 @@ const Room: React.FC = () => {
 			handleMouseUp();
 		};
 
-		const handleGameOver = () => {
+		const handleGameOver = (payload: any) => {
 			removeChatMessages();
 			clearCanvas();
 			socket.close();
 			console.log("WebSocket connection closed.");
 			alert('Game has finished');
+			navigate('/results', { state: { results: payload } });
 		};
 
 		const clearCanvas = () => {

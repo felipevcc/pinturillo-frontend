@@ -3,7 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHouse, faGear, faCouch } from '@fortawesome/free-solid-svg-icons';
 
-const Navbar = () => {
+const Navbar: React.FC = () => {
 	const location = useLocation();
 
 	return (
@@ -28,7 +28,7 @@ const Navbar = () => {
 						<span>Lobby</span>
 					</Link>
 				)}
-				{(location.pathname !== '/admin' && location.pathname !== '/room') && (
+				{(location.pathname !== '/admin' && location.pathname !== '/room' && location.pathname !== '/results') && (
 					<Link to='/admin' className="navbar-option">
 						<FontAwesomeIcon icon={faGear} className="nav-icon" />
 						<span>Admin</span>

@@ -14,7 +14,7 @@ import { alertError } from '../helpers/alertTemplates';
 import { v4 as uuidv4 } from 'uuid';
 /* import { API } from '../../env'; */
 
-const Home = () => {
+const Home: React.FC = () => {
 	const navigate = useNavigate();
 	const { player, setPlayer } = usePlayer() as PlayerContextType;
 	/* const [isLoading, setIsLoading] = useState(true); */
