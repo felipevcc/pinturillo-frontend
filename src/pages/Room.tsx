@@ -7,6 +7,7 @@ import { GameEventType } from '../enums/game-event.enum';
 import { environment } from '../environments/environment';
 import { Player } from '../models/player/player.interface';
 import PlayerInGame from '../components/player/PlayerInGame';
+import { alertPlayRoom } from '../helpers/alertTemplates';
 
 const Room: React.FC = () => {
 	const navigate = useNavigate();
@@ -22,7 +23,7 @@ const Room: React.FC = () => {
 		score: 0,
 		inTurn: false
 	});
-	const { player, setPlayer } = usePlayer() as PlayerContextType;
+	const { player } = usePlayer() as PlayerContextType;
 	const [players, setPlayers] = useState<Player[]>([]);
 	const isPainting = useRef(false);
 
@@ -34,7 +35,7 @@ const Room: React.FC = () => {
 		setPlayers([player]);
 
 		const ws = new WebSocket(
-			`${environment.socketUrl}/ws/room/1?userId=${player.id}&name=${player.name}&avatar=${player.avatar}`
+			`${environment.socketUrl}/ws/room/${player.playRoomId}?userId=${player.id}&name=${player.name}&avatar=${player.avatar}`
 		);
 		setSocket(ws);
 		return () => {
@@ -133,7 +134,7 @@ const Room: React.FC = () => {
 				]);
 				clearCanvas();
 			}
-			alert(payload.message);
+			alertPlayRoom(payload.message);
 		};
 
 		const handleChatMessage = (chatMessagePayload: any) => {
@@ -169,12 +170,12 @@ const Room: React.FC = () => {
 			handleMouseUp();
 		};
 
-		const handleGameOver = (payload: any) => {
+		const handleGameOver = async (payload: any) => {
 			removeChatMessages();
 			clearCanvas();
 			socket.close();
 			console.log("WebSocket connection closed.");
-			alert('Game has finished');
+			await alertPlayRoom('Game has finished');
 			navigate('/results', { state: { results: payload } });
 		};
 

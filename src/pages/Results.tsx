@@ -29,7 +29,7 @@ const Results: React.FC = () => {
 			<Navbar />
 			<div className="results-content">
 				<div className="results-content__go-back">
-					<Link to="/join" className="go-back-option">
+					<Link to="/join" className="go-back-option btn-design">
 						<FontAwesomeIcon icon={faChevronLeft} className="go-back-icon" />
 						<span>Volver al lobby</span>
 					</Link>

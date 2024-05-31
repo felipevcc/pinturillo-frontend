@@ -21,6 +21,13 @@
 				text-align: center;
 				color: white;
 			}
+			form {
+				display: flex;
+				flex-direction: column;
+				justify-content: center;
+				align-items: center;
+				gap: 20px;
+			}
 		}
 	}
 }

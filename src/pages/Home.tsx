@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { PlayerContextType } from '../models/player/player-context.interface';
 import { usePlayer } from '../context/PlayerContext';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -12,7 +12,6 @@ import {
 import { faPencil } from '@fortawesome/free-solid-svg-icons';
 import { alertError } from '../helpers/alertTemplates';
 import { v4 as uuidv4 } from 'uuid';
-/* import { API } from '../../env'; */
 
 const Home: React.FC = () => {
 	const navigate = useNavigate();
@@ -46,7 +45,7 @@ const Home: React.FC = () => {
 			setPlayer({ id: uuidv4(), playRoomId: null, score: 0, name: username, avatar: selectedImage, inTurn: false });
 			navigate('/join');
 		} else {
-			await alertError('Por favor, introduce un nombre de usuario válido');
+			await alertError('Introduce un nombre de usuario válido');
 		}
 	};
 
@@ -60,17 +59,6 @@ const Home: React.FC = () => {
 		return () => {
 			document.removeEventListener('mouseup', handleClickOutside);
 		};
-		// Query data
-		/* (async () => {
-			const url = new URL(`${API}/api/v1/data/summary`);
-			await fetch(url)
-				.then(response => response.json())
-				.then(data => {
-					setDataSummary(data);
-					setIsLoading(false);
-				})
-				.catch(error => console.log(error))
-		})(); */
 	}, [isOpen, dropdownRef]);
 
 	return (

@@ -10,7 +10,6 @@ import Join from './pages/Join';
 import Categories from './pages/admin/Categories';
 import Room from './pages/Room';
 import Results from './pages/Results';
-// import Results from './pages/Results';
 import { PlayerProvider } from './context/PlayerContext';
 
 function App() {
