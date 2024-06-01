@@ -8,6 +8,8 @@ import { environment } from '../environments/environment';
 import { Player } from '../models/player/player.interface';
 import PlayerInGame from '../components/player/PlayerInGame';
 import { alertPlayRoom } from '../helpers/alertTemplates';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faNoteSticky } from '@fortawesome/free-regular-svg-icons';
 
 const Room: React.FC = () => {
 	const navigate = useNavigate();
@@ -28,6 +30,7 @@ const Room: React.FC = () => {
 	const isPainting = useRef(false);
 	const [word, setWord] = useState('');
 	const [visibleWord, setVisibleWord] = useState(false);
+	const clearCanvasRef = useRef<() => void>(() => {});
 
 	useEffect(() => {
 		if (!player) {
@@ -164,6 +167,10 @@ const Room: React.FC = () => {
 
 		const handleSentDraw = (userDrawPayload: any) => {
 			if (isPlayerInTurn()) return;
+			if (userDrawPayload.clear) {
+				clearCanvas();
+				return;
+			}
 			const { x, y, lineWidth } = userDrawPayload;
 			ctx.lineWidth = lineWidth;
 			ctx.lineTo(x, y);
@@ -186,6 +193,12 @@ const Room: React.FC = () => {
 
 		const clearCanvas = () => {
 			ctx.clearRect(0, 0, canvas.width, canvas.height);
+		};
+
+		clearCanvasRef.current = () => {
+			clearCanvas();
+			const clearCanvasPayload = { clear: true };
+			socket.send(JSON.stringify({ gameEventType: GameEventType.USER_DRAW, drawPayload: clearCanvasPayload }));
 		};
 
 		const draw = (x: number, y: number) => {
@@ -271,7 +284,15 @@ const Room: React.FC = () => {
 							</div>
 						</div>
 					</div>
-					<canvas id="drawing-board" className={isPlayerInTurn() ? 'pencil-cursor' : ''} ref={canvasRef}></canvas>
+					<div className='canvas-container'>
+						<canvas id="drawing-board" className={isPlayerInTurn() ? 'pencil-cursor' : ''} ref={canvasRef}>
+						</canvas>
+						{isPlayerInTurn() &&
+							<button className='btn-clear-canvas' onClick={() => clearCanvasRef.current()}>
+								<FontAwesomeIcon icon={faNoteSticky} flip="vertical" className='icon-clear-canvas' />
+							</button>
+						}
+					</div>
 				</div>
 				<div id="chat">
 					<div className='messages-container scroll-bar'>
