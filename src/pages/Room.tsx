@@ -136,9 +136,9 @@ const Room: React.FC = () => {
 				]);
 			}
 			setVisibleWord(true);
+			clearCanvas();
 			await alertPlayRoom(payload.message);
 			setVisibleWord(false);
-			clearCanvas();
 			setWord(payload.roundInfo.word);
 		};
 
@@ -271,7 +271,7 @@ const Room: React.FC = () => {
 							</div>
 						</div>
 					</div>
-					<canvas id="drawing-board" ref={canvasRef}></canvas>
+					<canvas id="drawing-board" className={isPlayerInTurn() ? 'pencil-cursor' : ''} ref={canvasRef}></canvas>
 				</div>
 				<div id="chat">
 					<div className='messages-container scroll-bar'>

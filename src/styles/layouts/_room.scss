@@ -78,6 +78,9 @@
 				height: calc(100% - 83px);
 				background-color: white;
 				border-radius: 0 0 10px 10px;
+				&.pencil-cursor {
+					cursor: url('https://cdn-icons-png.flaticon.com/128/2280/2280532.png') 0 125, auto;
+				}
 			}
 		}
 		#chat {
@@ -142,7 +145,3 @@
 		}
 	}
 }
-
-/* #drawing-board {
-	cursor: url('https://cdn.pixabay.com/photo/2020/08/08/05/15/pencil-5472136_1280.png') 16 16, auto;
-} */
