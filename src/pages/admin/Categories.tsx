@@ -3,21 +3,27 @@ import { Link, useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 /* import { faPencil } from '@fortawesome/free-solid-svg-icons'; */
 import Navbar from '../../components/bars/Navbar';
+import { getCategories } from '../../services/categories';
+import { alertError } from '../../helpers/alertTemplates';
+import { Category } from '../../models/category/category.interface';
 
 const Categories = () => {
 	/* const navigate = useNavigate(); */
 	const [categoryName, setCategoryName] = useState('');
-	const [editingCategory, setEditingCategory] = useState(null); // Estado para almacenar la categoría que se está editando
+	// Estado para almacenar la categoría que se está editando
+	const [editingCategory, setEditingCategory] = useState(null);
 
-	const categories = [
-		// Ejemplo de categorías
-		{ id: 1, name: 'Categoría 1' },
-		{ id: 2, name: 'Categoría 2' },
-		{ id: 3, name: 'Categoría 3' }
-	];
+	const [categories, setCategories] = useState([]);
 
 	useEffect(() => {
 		document.body.classList.add('light-theme');
+
+		getCategories().then((data) => {
+			setCategories(data);
+		}).catch(async (error) => {
+			console.error('Error al obtener las categorías:', error);
+			await alertError('Error: servicio caído');
+		});
 
 		return () => {
 			document.body.classList.remove('light-theme');
@@ -33,20 +39,19 @@ const Categories = () => {
 	const handleCreateOrUpdateCategory = () => {
 		if (editingCategory) {
 			console.log(`Actualizando categoría: ${categoryName}`);
-			// Aquí puedes llamar a la función que actualiza la categoría
+			// Edit category
 		} else {
 			console.log(`Creando categoría: ${categoryName}`);
-			// Aquí puedes llamar a la función que crea la categoría
+			// Create category
 		}
-		setCategoryName(''); // Limpiar el input
-		setEditingCategory(null); // Restablecer el estado de edición
+		setCategoryName(''); // Clean input
+		setEditingCategory(null); // Reset edit state
 	};
 
 	const handleEditCategory = (category: any) => {
-		// Manejador para editar la categoría
 		setEditingCategory(category);
 		setCategoryName(category ? category.name : '');
-		// Aquí puedes abrir el modal
+		// Open modal
 	};
 
 	return (
@@ -74,8 +79,7 @@ const Categories = () => {
 										</tr>
 									</thead>
 									<tbody>
-										{/* Aquí debes renderizar tus categorías. Por ejemplo: */}
-										{categories.map(category => (
+										{categories.map((category: Category) => (
 											<tr key={category.id}>
 												<td>{category.name}</td>
 												<td>

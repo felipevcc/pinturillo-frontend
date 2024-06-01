@@ -26,6 +26,8 @@ const Room: React.FC = () => {
 	const { player } = usePlayer() as PlayerContextType;
 	const [players, setPlayers] = useState<Player[]>([]);
 	const isPainting = useRef(false);
+	const [word, setWord] = useState('');
+	const [visibleWord, setVisibleWord] = useState(false);
 
 	useEffect(() => {
 		if (!player) {
@@ -125,16 +127,19 @@ const Room: React.FC = () => {
 			}
 		};
 
-		const handleRoundNotification = (payload: any) => {
+		const handleRoundNotification = async (payload: any) => {
 			if (payload.roundInfo) {
 				playerInTurn.current = payload.roundInfo.playerInTurn;
 				setPlayers([
 					...payload.roundInfo.guessers.map((player: any) => ({ ...player, inTurn: false })),
 					{ ...payload.roundInfo.playerInTurn, inTurn: true }
 				]);
-				clearCanvas();
 			}
-			alertPlayRoom(payload.message);
+			setVisibleWord(true);
+			await alertPlayRoom(payload.message);
+			setVisibleWord(false);
+			clearCanvas();
+			setWord(payload.roundInfo.word);
 		};
 
 		const handleChatMessage = (chatMessagePayload: any) => {
@@ -254,6 +259,18 @@ const Room: React.FC = () => {
 					</div>
 				</div>
 				<div className="drawing-board">
+					<div className='drawing-board__header'>
+						<div className='board-header-top'>
+							<h5>MESA N° {player?.playRoomId}</h5>
+						</div>
+						<div className='board-header-low'>
+							<div className='round-word'>
+								{word && word.length > 0 &&
+									<h2>{isPlayerInTurn() || visibleWord ? (word.toUpperCase() || '') : '_ '.repeat(word?.length ?? 0)}</h2>
+								}
+							</div>
+						</div>
+					</div>
 					<canvas id="drawing-board" ref={canvasRef}></canvas>
 				</div>
 				<div id="chat">
