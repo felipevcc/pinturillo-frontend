@@ -101,7 +101,7 @@ const Join: React.FC = () => {
 						>
 							<option disabled value=''>Seleccionar categoría</option>
 							{categories.map((category: Category) => (
-								<option key={category.id} value={category.id}>
+								<option key={category.id} value={category.id!}>
 									{category.name}
 								</option>
 							))}
@@ -119,7 +119,7 @@ const Join: React.FC = () => {
 						>
 							<option disabled value=''>Seleccionar categoría</option>
 							{categories.map((category: Category) => (
-								<option key={category.id} value={category.id}>
+								<option key={category.id} value={category.id!}>
 									{category.name}
 								</option>
 							))}

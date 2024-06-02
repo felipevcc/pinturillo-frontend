@@ -142,7 +142,7 @@ const Room: React.FC = () => {
 			clearCanvas();
 			await alertPlayRoom(payload.message);
 			setVisibleWord(false);
-			setWord(payload.roundInfo.word);
+			if (payload.roundInfo) {setWord(payload.roundInfo.word)};
 		};
 
 		const handleChatMessage = (chatMessagePayload: any) => {
