@@ -1,7 +1,14 @@
 import { environment } from '../environments/environment';
-import { alertError } from '../helpers/alertTemplates';
+import { alertError, alertDelete } from '../helpers/alertTemplates';
 
 const API = environment.apiUrl;
+
+export const getWords = async () => {
+	const url = new URL(`${API}/api/v1/words`);
+	const response = await fetch(url);
+	const data = await response.json();
+	return data;
+}
 
 export const createWord = async (wordData: any) => {
 	const url = new URL(`${API}/api/v1/words`);
@@ -26,6 +33,7 @@ export const createWord = async (wordData: any) => {
 	return data;
 }
 
+// words-by-category relationship
 const relateWordCategory = async (wordId: number, categoryId: number) => {
 	const url = new URL(`${API}/api/v1/words-by-category`);
 	const response = await fetch(url, {
@@ -42,3 +50,28 @@ const relateWordCategory = async (wordId: number, categoryId: number) => {
 	const data = await response.json();
 	return data;
 }
+
+export const updateWord = async (wordData: any) => {
+	const url = new URL(`${API}/api/v1/words`);
+	const response = await fetch(url, {
+		method: 'PUT',
+		headers: {
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify({ id: wordData.id, text: wordData.text })
+	});
+	if (!response.ok) {
+		const errorData = await response.json();
+		throw new Error(errorData.message ? errorData.message : undefined);
+	}
+	return response.json();
+};
+
+export const deleteWord = async (wordId: number) => {
+	const url = new URL(`${API}/api/v1/words/${wordId}`);
+	const response = await fetch(url, { method: 'DELETE' });
+	if (!response.ok) {
+		const errorData = await response.json();
+		throw new Error(errorData.message ? errorData.message : undefined);
+	}
+};

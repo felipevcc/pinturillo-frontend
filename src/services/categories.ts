@@ -40,3 +40,12 @@ export const updateCategory = async (categoryData: any) => {
 	}
 	return response.json();
 };
+
+export const deleteCategory = async (categoryId: number) => {
+	const url = new URL(`${API}/api/v1/categories/${categoryId}`);
+	const response = await fetch(url, { method: 'DELETE' });
+	if (!response.ok) {
+		const errorData = await response.json();
+		throw new Error(errorData.message ? errorData.message : undefined);
+	}
+};
