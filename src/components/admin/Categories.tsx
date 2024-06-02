@@ -94,7 +94,6 @@ const Categories = () => {
 		// Update category
 		updateCategory(editingCategory).then(async (data) => {
 			console.log('Categoría actualizada:', data);
-			handleCloseCategoryModal();
 			await alertTemporalSuccess('Categoría actualizada exitosamente');
 		}).catch(async (error) => {
 			console.error('Error al actualizar la categoría:', error);

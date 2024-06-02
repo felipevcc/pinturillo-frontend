@@ -176,7 +176,7 @@ const Words = () => {
 					<Modal.Title>{word.id ? 'Actualizar' : 'Agregar' } palabra</Modal.Title>
 				</Modal.Header>
 				<Modal.Body>
-					<Form onSubmit={e => { e.preventDefault(); createNewWord(); }}>
+					<Form onSubmit={e => { e.preventDefault(); word.id ? updateWordData() : createNewWord(); }}>
 						<Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
 							<Form.Label>Palabra</Form.Label>
 							<Form.Control

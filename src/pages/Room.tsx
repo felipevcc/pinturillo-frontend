@@ -187,7 +187,7 @@ const Room: React.FC = () => {
 			clearCanvas();
 			socket.close();
 			console.log("WebSocket connection closed.");
-			await alertPlayRoom('Game has finished');
+			await alertPlayRoom('El juego ha terminado');
 			navigate('/results', { state: { results: payload } });
 		};
 
