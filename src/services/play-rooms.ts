@@ -11,7 +11,7 @@ export const createPlayRoom = async (playRoomData: NewPlayRoom) => {
 		headers: {
 			'Content-Type': 'application/json'
 		},
-		body: JSON.stringify(playRoomData)
+		body: JSON.stringify({ ...playRoomData, id: 0 })
 	});
 	if (!response.ok) {
 		const errorData = await response.json();

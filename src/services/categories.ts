@@ -16,7 +16,7 @@ export const createCategory = async (categoryData: any) => {
 		headers: {
 			'Content-Type': 'application/json'
 		},
-		body: JSON.stringify({ name: categoryData.name })
+		body: JSON.stringify({ id: 0, name: categoryData.name })
 	});
 	if (!response.ok) {
 		const errorData = await response.json();

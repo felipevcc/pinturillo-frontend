@@ -17,7 +17,7 @@ export const createWord = async (wordData: any) => {
 		headers: {
 			'Content-Type': 'application/json'
 		},
-		body: JSON.stringify({ text: wordData.text })
+		body: JSON.stringify({ id: 0, text: wordData.text })
 	});
 	if (!response.ok) {
 		const errorData = await response.json();
@@ -41,7 +41,7 @@ const relateWordCategory = async (wordId: number, categoryId: number) => {
 		headers: {
 			'Content-Type': 'application/json'
 		},
-		body: JSON.stringify({ wordId: wordId, categoryId: categoryId })
+		body: JSON.stringify({ id: 0, wordId: wordId, categoryId: categoryId })
 	});
 	if (!response.ok) {
 		const errorData = await response.json();
