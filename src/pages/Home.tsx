@@ -16,7 +16,6 @@ import { v4 as uuidv4 } from 'uuid';
 const Home: React.FC = () => {
 	const navigate = useNavigate();
 	const { player, setPlayer } = usePlayer() as PlayerContextType;
-	/* const [isLoading, setIsLoading] = useState(true); */
 	const [isOpen, setIsOpen] = useState(false);
 	const dropdownRef = useRef(null);
 
@@ -26,7 +25,7 @@ const Home: React.FC = () => {
 		"https://upload.wikimedia.org/wikipedia/en/thumb/c/c3/Dignitas_logo.svg/800px-Dignitas_logo.svg.png",
 		"https://files.tips.gg/static/image/teams/anonymo-esports-valorant.png",
 		"https://static.vecteezy.com/system/resources/previews/026/676/817/non_2x/gamer-mascot-logo-free-png.png",
-		"https://vxesport.com/wp-content/uploads/2022/03/tundra-dota2.png",
+		"https://www.pngkey.com/png/full/264-2647772_mortality-esports-logo-gamer-team-logo-png.png",
 		"https://gameshard.s3.eu-central-1.amazonaws.com/teams/logo/gha1nHXhPly0gZpx1kCRcmDgaOBTdw1UEDAFAcoC.png",
 		"https://e-skill.es/storage/avatares/avatares-1612463722.png",
 		"https://gamepedia.cursecdn.com/cod_esports_gamepedia_en/9/93/Echo_Foxlogo.png",

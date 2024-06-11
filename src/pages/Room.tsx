@@ -44,7 +44,7 @@ const Room: React.FC = () => {
 		);
 		setSocket(ws);
 		return () => {
-			if (socket) socket.close();
+			if (socket || ws) ws.close();
 		};
 	}, []);
 
@@ -83,15 +83,9 @@ const Room: React.FC = () => {
 			console.log('WebSocket connection open.');
 			sendMessage({}, GameEventType.JOIN_GAME);
 		};
-
 		socket.onerror = error => {
 			console.error('WebSocket error:', error);
 		};
-
-		socket.onclose = () => {
-			console.log('WebSocket connection closed.');
-		};
-
 		socket.onmessage = event => {
 			// console.log(event.data);
 			handleEventType(JSON.parse(event.data));
@@ -186,7 +180,6 @@ const Room: React.FC = () => {
 			removeChatMessages();
 			clearCanvas();
 			socket.close();
-			console.log("WebSocket connection closed.");
 			await alertPlayRoom('El juego ha terminado');
 			navigate('/results', { state: { results: payload } });
 		};
